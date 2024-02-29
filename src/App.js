@@ -11,11 +11,11 @@ function App() {
     if (!email || !username || !dob || !phone) {
       alert("Please fill out all fields.");
     } else if (!email.includes('@')) {
-      alert("Invalid email. Please check your email address.");
+      alert("Invalid email");
     } else if (phone.length !== 10) {
-      alert("Invalid phone number. Please enter a 10-digit phone number.");
+      alert("Invalid phone number");
     } else if (new Date(dob) > new Date()) {
-      alert("Invalid date of birth. Please enter a past date.");
+      alert("Invalid date of birth");
     } else {
       setShowModal(false);
     }
@@ -23,17 +23,18 @@ function App() {
 
   return (
     <div>
+      <h1>User Details Modal</h1>
       <button onClick={() => setShowModal(true)}>Open Form</button>
       {showModal && (
         <div className="modal">
           <div className="modal-content">
             <label>
               Email:
-              <input id="email" value={email} onChange={e => setEmail(e.target.value)} />
+              <input id="email" value={email} onChange={e => setEmail(e.target.value)} required title = "Please include an '@' in the email address. {} does not have an '@'." />
             </label>
             <label>
               Username:
-              <input id="username" value={username} onChange={e => setUsername(e.target.value)} />
+              <input id="username" value={username} onChange={e => setUsername(e.target.value)} required/>
             </label>
             <label>
               Date of Birth:
