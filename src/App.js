@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./App.css";
 
 function App() {
   const [isModal, setIsModal] = useState(false);
+  const modalContentRef = useRef(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -11,28 +12,16 @@ function App() {
     const phone = e.target.elements.phone.value;
     const dob = e.target.elements.dob.value;
 
-    if (!username) {
-      alert("Please fill in the username field");
-      return;
-    }
-    if (!email) {
-      alert("Please fill in the email field");
-      return;
-    }
-    if (!phone) {
-      alert("Please fill in the phone number field");
-      return;
-    }
-    if (!dob) {
-      alert("Please fill in the date of birth field");
+    if (!username || !email || !phone || !dob) {
+      alert("Please fill in the field");
       return;
     }
     if (!email.includes("@")) {
-      alert(`Please include an '@' in the email address. ${email} is missing an '@'.`);
+      alert("Invalid email");
       return;
     }
     if (phone.length !== 10 || !/^\d+$/.test(phone)) {
-      alert("Invalid phone number. Please enter a 10-digit phone number.");
+      alert("Invalid phone number");
       return;
     }
 
@@ -40,7 +29,7 @@ function App() {
     const futureDate = new Date(dob);
 
     if (currentDate < futureDate) {
-      alert("Invalid date of birth. Please enter a past date.");
+      alert("Invalid date of birth");
       return;
     }
 
@@ -51,7 +40,8 @@ function App() {
     setIsModal(true);
   };
   const handleClose = (e) => {
-    if (e.target.classList.contains("modal")) {
+    // Check if modalContentRef.current is not null before calling contains
+    if (modalContentRef.current && !modalContentRef.current.contains(e.target)) {
       setIsModal(false);
     }
   };
@@ -63,7 +53,7 @@ function App() {
           Open Form
         </button>
         {isModal && (
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
+          <div className="modal-content" ref={modalContentRef}>
             <h1>Fill Details</h1>
             <form onSubmit={handleSubmit} className="form-data">
               <div className="form-detail">
@@ -93,7 +83,7 @@ function App() {
                 <input className="input-data" id="dob" type="date" required />
               </div>
 
-              <button className="submit-button" type="submit">
+              <button className="submit-button" onClick={handleClose}>
                 Submit
               </button>
             </form>
@@ -105,4 +95,3 @@ function App() {
 }
 
 export default App;
-
